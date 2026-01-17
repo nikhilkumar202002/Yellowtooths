@@ -24,7 +24,9 @@ const config: Config = {
         "scroll-left": "scroll-left 30s linear infinite",
         "scroll-right": "scroll-right 30s linear infinite",
         ripple: "ripple var(--duration,2s) ease calc(var(--i, 0)*.2s) infinite",
+        grid: "grid 15s linear infinite",
       },
+      
       keyframes: {
         "scroll-left": {
           "0%": { transform: "translateX(0)" },
@@ -33,6 +35,10 @@ const config: Config = {
         "scroll-right": {
           "0%": { transform: "translateX(-50%)" },
           "100%": { transform: "translateX(0)" },
+        },
+        grid: {
+          "0%": { transform: "translateY(-50%)" },
+          "100%": { transform: "translateY(0)" },
         },
         // Ripple Keyframes
         ripple: {

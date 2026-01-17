@@ -34,12 +34,13 @@ const PosterInfinityCarousel = ({
     lg: 4,
     xl: 5,
   },
+  // 1. INCREASED SPEED: Values bumped up for faster scrolling
   columnSpeedSettings = [
     { speed: 0.08, reversed: false },
-    { speed: 0.09, reversed: true },
     { speed: 0.1, reversed: true },
-    { speed: 0.12, reversed: true },
-    { speed: 0.13, reversed: true },
+    { speed: 0.07, reversed: true },
+    { speed: 0.09, reversed: true },
+    { speed: 0.08, reversed: true },
   ],
   interactionMode = 'click',
 }: Props) => {
@@ -48,9 +49,8 @@ const PosterInfinityCarousel = ({
   const animationsRef = useRef<gsap.core.Timeline[]>([]);
   const activeAnimationRef = useRef<gsap.core.Timeline | null>(null);
 
-  // Initialize columnRefs with max possible columns
   const maxColumns = Math.max(...Object.values(defaultColumns));
-  // Type: array of refs that might hold HTMLDivElements
+  
   const columnRefs = useRef<Array<{ current: HTMLDivElement | null }>>(
     Array(maxColumns)
       .fill(null)
@@ -67,12 +67,11 @@ const PosterInfinityCarousel = ({
       const response: any = await getAllPosters();
       return Array.isArray(response) ? response : response?.data || [];
     },
-    staleTime: 0,
-    gcTime: 0,
-    refetchInterval: 5000,
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 10,
+    refetchOnWindowFocus: false,
   });
 
-  // Debounce helper
   const debounce = (fn: (...args: any[]) => void, delay: number) => {
     let timer: NodeJS.Timeout;
     return (...args: any[]) => {
@@ -83,7 +82,12 @@ const PosterInfinityCarousel = ({
 
   const cleanupAnimations = () => {
     if (animationsRef.current.length) {
-      animationsRef.current.forEach((anim) => anim.kill && anim.kill());
+      animationsRef.current.forEach((anim) => {
+        if (anim) {
+            anim.pause();
+            anim.kill();
+        }
+      });
       animationsRef.current = [];
     }
     activeAnimationRef.current = null;
@@ -120,7 +124,7 @@ const PosterInfinityCarousel = ({
 
     return Array.from({ length: numColumns }, (_, i) => {
       const columnWorks = featuredWorks.filter((_: any, index: number) => index % numColumns === i);
-      return [...columnWorks, ...columnWorks, ...columnWorks];
+      return [...columnWorks, ...columnWorks, ...columnWorks, ...columnWorks];
     });
   }, [featuredWorks, numColumns]);
 
@@ -135,14 +139,14 @@ const PosterInfinityCarousel = ({
       if (gridRef.current) {
         initializeAnimations();
       }
-    }, 100);
+    }, 300);
 
     return () => clearTimeout(timer);
   }, [numColumns, featuredWorks]);
 
   const initializeAnimations = () => {
-    const mapSpeedToDuration = (speed: number) => 10 / speed;
-    const defaultSpeed = 0.5;
+    const mapSpeedToDuration = (speed: number) => 20 / (speed || 0.05);
+    const defaultSpeed = 0.05;
     const removers: Array<() => void> = [];
 
     const columns = Array.from({ length: numColumns }, (_, index) => {
@@ -159,16 +163,21 @@ const PosterInfinityCarousel = ({
       if (!ref?.current) return;
 
       const images = gsap.utils.toArray(ref.current.querySelectorAll('.featured-work-image'));
-      if (!images.length) return;
+      
+      if (!images.length || images.length < 3) return;
 
       const animation = verticalLoop(images, {
         repeat: -1,
         duration,
         reversed,
         snap: false,
+        paddingBottom: 20,
       });
-      animation.play();
-      animationsRef.current.push(animation);
+
+      if (animation) {
+          animation.play();
+          animationsRef.current.push(animation);
+      }
 
       if (interactionMode === 'click') {
         const clickHandler = () => {
@@ -213,7 +222,7 @@ const PosterInfinityCarousel = ({
   if (error) return <Error />;
 
   return (
-    <div className="relative z-0 flex min-h-[150vh] flex-col overflow-hidden">
+    <div className="relative z-0 flex min-h-[150vh] flex-col overflow-hidden bg-black">
       <section className="mx-1 h-[90vh] rounded-xl md:mx-4">
         <div
           className={
@@ -232,7 +241,8 @@ const PosterInfinityCarousel = ({
               className="mx-auto flex w-fit flex-col">
               {columnWorks.map((service, index) => (
                 <div className="py-0" key={`image-${colIndex}-${index}`}>
-                  <div className="featured-work-image h-auto w-full overflow-hidden p-1 will-change-transform md:p-4 lg:p-5">
+                  {/* 2. REDUCED GAP: Changed padding to 'md:p-2' (was 'md:p-4 lg:p-5') */}
+                  <div className="featured-work-image h-auto w-full overflow-hidden p-1 will-change-transform md:p-3">
                     <img
                       loading="lazy"
                       src={service.image_path}
