@@ -25,9 +25,12 @@ const config: Config = {
         "scroll-right": "scroll-right 30s linear infinite",
         ripple: "ripple var(--duration,2s) ease calc(var(--i, 0)*.2s) infinite",
         grid: "grid 15s linear infinite",
+        marquee: "marquee var(--duration) linear infinite",
+        "marquee-vertical": "marquee-vertical var(--duration) linear infinite",
       },
       
       keyframes: {
+        
         "scroll-left": {
           "0%": { transform: "translateX(0)" },
           "100%": { transform: "translateX(-25%)" },
@@ -48,6 +51,15 @@ const config: Config = {
           "50%": {
             transform: "translate(-50%, -50%) scale(0.9)",
           },
+          
+        },
+        marquee: {
+      from: { transform: 'translateX(0)' },
+      to: { transform: 'translateX(calc(-100% - var(--gap, 1rem)))' },
+    },
+    "marquee-vertical": {
+          from: { transform: "translateY(0)" },
+          to: { transform: "translateY(calc(-100% - var(--gap)))" },
         },
       },
     },

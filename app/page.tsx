@@ -37,19 +37,18 @@ const HomePage = () => {
     setIsMounted(true);
     logVisit();
     
-    // Ensure we start at the top
     if (typeof window !== 'undefined') {
         window.scrollTo(0, 0);
     }
     
+    // Refresh only ONCE after mount to ensure layout is correct
     const timer = setTimeout(() => {
       ScrollTrigger.refresh();
-    }, 500);
+    }, 1000);
 
     return () => clearTimeout(timer);
   }, []);
 
-  // Data Fetching
   const queries = useQueries({
     queries: [
       {
@@ -72,7 +71,7 @@ const HomePage = () => {
   const clientsQuery = queries[0];
   const servicesQuery = queries[1];
 
-  // Refs for GSAP Orchestration
+  // Refs
   const mainContainerRef = useRef<HTMLDivElement>(null);
   const videoBannerRef = useRef<HTMLDivElement>(null);
   const zoomTextRef = useRef<HTMLDivElement>(null);
@@ -80,8 +79,6 @@ const HomePage = () => {
   const servicesWrapperRef = useRef<HTMLDivElement>(null);
   const cardsContainerRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
-
-  // Sections Refs (for triggers)
   const servicesSectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -90,7 +87,7 @@ const HomePage = () => {
     }
   }, [pathname, dispatch, isMounted]);
 
-  // 1. Fade In Main Container
+  // 1. Initial Fade In
   useGSAP(() => {
     if (!isMounted || !mainContainerRef.current) return;
     gsap.to(mainContainerRef.current, { opacity: 1, duration: 1.5, ease: 'expo.in' });
@@ -104,38 +101,60 @@ const HomePage = () => {
     const servicesWrapper = servicesWrapperRef.current;
     const zoomText = zoomTextRef.current;
     const zoomO = zoomText?.querySelector('.zoom-o');
+    const servicesSection = servicesSectionRef.current;
 
-    if (videoBanner) gsap.set(videoBanner, { position: 'absolute', zIndex: '3', opacity: '1' });
-    if (servicesWrapper) gsap.set(servicesWrapper, { position: 'relative', zIndex: '1', opacity: '0' });
+    // --- INITIAL STATES ---
+    if (videoBanner) {
+        gsap.set(videoBanner, { position: 'absolute', zIndex: '3', opacity: '1' });
+    }
+    if (servicesWrapper) {
+        gsap.set(servicesWrapper, { position: 'relative', zIndex: '1', opacity: '0' });
+    }
 
-    if (zoomText && zoomO && videoBanner) {
+    // --- VIDEO ZOOM LOGIC ---
+    if (zoomText && zoomO && videoBanner && servicesSection) {
       gsap.to(zoomO, {
         scrollTrigger: {
           trigger: videoBanner,
           pin: true,
           start: 'top top',
           end: 'bottom top',
-          scrub: 2,
-          // Removed the aggressive snap logic here to prevent jump to services
+          scrub: 2, 
+          
           onEnter: () => dispatch(setIsTilesFlipped(true)),
+          
           onLeaveBack: () => {
             dispatch(setIsTilesFlipped(false));
-            gsap.set(videoBanner, { position: 'absolute', zIndex: '3', opacity: '1' });
+            // DO NOT call ScrollTrigger.refresh() here. It causes the jump/render issue.
+            if (videoBanner) {
+               gsap.set(videoBanner, { position: 'absolute', zIndex: '3', opacity: '1' });
+            }
           },
+
+          // FIX: Use standard snap logic. Removed conflicting lenis.scrollTo
+          snap: {
+            snapTo: "labelsDirection", // or simply 1 to snap to end
+            duration: { min: 0.2, max: 0.5 },
+            delay: 0.1,
+          },
+
           onUpdate: (self) => {
             const progress = self.progress;
             const scale = progress > 0 ? gsap.utils.mapRange(0, 1, 1, 10)(progress) : 1;
             
+            const videoOpacity = 1 - progress;
+            const servicesOpacity = Math.min(1, progress);
+            const servicesScale = Math.min(1, progress);
+
             gsap.set(zoomText, { scale: scale });
             gsap.set(zoomO, { scale: scale });
             
-            // Fading out video, fading in services
-            gsap.set(videoBanner, { opacity: 1 - progress });
-            
+            gsap.set(videoBanner, { opacity: videoOpacity });
+
             if (servicesWrapper) {
               gsap.set(servicesWrapper, {
-                opacity: Math.min(1, progress),
-                scale: Math.min(1, progress),
+                opacity: servicesOpacity,
+                scale: servicesScale,
                 transformOrigin: 'center center',
               });
             }
@@ -144,7 +163,7 @@ const HomePage = () => {
       });
     }
 
-    // Scroll Logic for Services Wrapper Layering
+    // --- SERVICES LAYER LOGIC ---
     if (servicesWrapper) {
        const scrollEnd = window.innerWidth <= 768 ? 'bottom 100%' : 'bottom 50%';
        
@@ -157,17 +176,24 @@ const HomePage = () => {
            pin: true,
            scrub: 2,
            onUpdate: (self) => {
-             if (self.progress >= 0.8) gsap.set(servicesWrapper, { zIndex: 3 });
+             // Logic to swap Z-Index so cards become clickable/viewable
+             if (self.progress >= 0.8) {
+                gsap.set(servicesWrapper, { zIndex: 3 });
+             }
            },
            onLeaveBack: () => {
-             if (videoBanner) gsap.set(videoBanner, { position: 'absolute', zIndex: '3', opacity: '1' });
+             // Reset video banner on scroll back up
+             if (videoBanner) {
+                gsap.set(videoBanner, { position: 'absolute', zIndex: '3', opacity: '1' });
+             }
            }
          }
        });
     }
+
   }, { scope: mainContainerRef, dependencies: [clientsQuery.data, servicesQuery.data, lenis, isMounted] });
 
-  // 3. Cards Stagger Animation
+  // 3. Simple Cards Stagger
   useGSAP(() => {
     if (!isMounted) return;
     const validCards = cardsRef.current.filter(Boolean);
@@ -189,22 +215,18 @@ const HomePage = () => {
     });
   }, { scope: cardsContainerRef, dependencies: [clientsQuery.data, servicesQuery.data, isMounted] });
 
-  // Render logic
   if (!isMounted || clientsQuery.isLoading || servicesQuery.isLoading) return <Loading />;
   if (clientsQuery.error || servicesQuery.error) return <Error />;
 
   return (
     <div ref={mainContainerRef} className="flex min-h-screen w-full flex-col overflow-x-hidden">
       
-      {/* 1. Infinite Poster Carousel */}
       <PosterInfinityCarousel />
 
-      {/* 2. Ripple Text Demo */}
       <div className={'relative flex h-screen'}>
         <RippleDemo />
       </div>
 
-      {/* 3. Main Interaction Section (Video Zoom + Services) */}
       <section ref={servicesSectionRef} className="relative">
         <HeroVideoBanner 
             ref={videoBannerRef} 
@@ -220,13 +242,10 @@ const HomePage = () => {
         />
       </section>
 
-      {/* 4. Clients Marquee */}
       <ClientsMarquee clients={clientsQuery.data || []} />
 
-      {/* 5. Bottom Story */}
       <CollaborationStory />
 
-      {/* 6. Footer CTA */}
       <section className="relative flex items-center justify-center px-4 pb-20">
         <FooterCallToActionButton 
             normalString={'Partner with us to [BR] Create something [BR]'} 

@@ -26,8 +26,7 @@ const LenisScroll = ({ children }: LenisScrollProps) => {
   }, []);
 
   return (
-    // autoRaf={false} is crucial here because we are manually driving 
-    // the raf via gsap.ticker.add(update) above.
+    // autoRaf={false} is crucial because we manually drive raf via gsap.ticker
     <ReactLenis root ref={lenisRef} autoRaf={false}>
       {children}
     </ReactLenis>

@@ -58,7 +58,7 @@ const RetroGridDemo = () => {
           />
 
           <TextAnimation
-            classname={'text-h2-xl font-beckman font-bold uppercase text-amber-400'}
+            classname={'text-[110px] font-beckman font-bold uppercase text-amber-400'}
             textPosition={'center'}
             delay={0.5}
             duration={2}

@@ -3,6 +3,7 @@ import { Providers } from './components/providers';
 import NavBar from './components/common/NavBar'; 
 import Footer from './components/common/Footer';
 import Preloader from './components/common/Preloader';
+import { Toaster } from 'sonner';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -28,6 +29,7 @@ export default function RootLayout({
              {children}
            </div>
            <Footer />
+           <Toaster position="top-center" richColors theme="dark" />
         </Providers>
       </body>
     </html>
