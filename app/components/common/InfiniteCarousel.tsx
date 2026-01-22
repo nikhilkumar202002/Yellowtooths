@@ -6,17 +6,17 @@ import { getFeaturedWorks } from '../../api/services/services';
 import { cn } from '../../lib/utils';
 import HorizontalInfiniteSlider from '../common/HorizontalInfiniteSlider';
 import { BorderGlowCard } from '../common/BorderGlowCard';
-import Loading from '../common/Loading'; // Ensure you have this
+import Loading from '../common/Loading';
+// Import IMAGE_BASE_URL explicitly
+import { IMAGE_BASE_URL } from '../../api/v1/axios'; 
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://yt.jinskadamthodu.com/public';
-
-// Helper to construct full image URL
+// Helper to construct full image URL using IMAGE_BASE_URL
 const getFullImageUrl = (path: string | undefined) => {
   if (!path) return '';
   if (path.startsWith('http') || path.startsWith('https')) return path;
 
   const cleanPath = path.startsWith('/') ? path.substring(1) : path;
-  const cleanBase = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
+  const cleanBase = IMAGE_BASE_URL.endsWith('/') ? IMAGE_BASE_URL.slice(0, -1) : IMAGE_BASE_URL;
 
   return `${cleanBase}/${cleanPath}`;
 };
@@ -49,21 +49,12 @@ function InfiniteCarousel() {
   const { data: featuredWorks = [], isLoading, isError } = useQuery({
     queryKey: ['infinite-carousel_get-featured-works'],
     queryFn: async () => {
-      console.log('Fetching Featured Works...');
       const response = await getFeaturedWorks();
-      console.log('Featured Works Response:', response);
       return Array.isArray(response) ? response : [];
     },
     staleTime: 1000 * 60 * 5,
     refetchOnWindowFocus: false,
   });
-
-  // Debugging logs
-  useEffect(() => {
-    if (featuredWorks.length > 0) {
-      console.log('Carousel Images loaded:', featuredWorks.length);
-    }
-  }, [featuredWorks]);
 
   if (isLoading) {
     return <div className="flex h-40 w-full items-center justify-center"><Loading /></div>;
@@ -83,7 +74,7 @@ function InfiniteCarousel() {
         {featuredWorks.map((item: any, index: number) => (
           <ReviewCard
             key={item.id || index}
-            image_path={item.image_path} // Ensure this matches API key
+            image_path={item.image_path}
             name={item.name}
           />
         ))}

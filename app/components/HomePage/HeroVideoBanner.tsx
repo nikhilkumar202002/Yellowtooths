@@ -21,7 +21,7 @@ const HeroVideoBanner = forwardRef<HTMLDivElement, HeroVideoBannerProps>(
             playsInline
             className="absolute h-full w-full object-cover"
           >
-            <source src="/VIDEOS/MainVideo.mp4" type="video/mp4" />
+            <source src="/VIDEOS/MainVideo.mp" type="video/mp4" />
             Your browser does not support the video tag.
           </video>
 
@@ -32,7 +32,8 @@ const HeroVideoBanner = forwardRef<HTMLDivElement, HeroVideoBannerProps>(
                   <div className="relative w-fit">
                     <div
                       ref={zoomTextRef}
-                      className="text-center font-ppmori text-[10vw] font-bold tracking-tighter lg:text-[7rem]"
+                      // UPDATED: Increased text size to text-[14vw] and lg:text-[10rem]
+                      className="text-center font-ppmori text-[14vw] font-bold tracking-tighter lg:text-[10rem]"
                     >
                       <div>
                         <p className="mr-[0vw] tracking-tighter lg:mr-[0vw]">zoom</p>

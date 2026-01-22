@@ -1,19 +1,33 @@
 import axios from 'axios';
 
-// Use NEXT_PUBLIC_ prefix for client-side access
-const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://yt.jinskadamthodu.com/public';
+// 1. MAIN API URL (Includes /api)
+export const API_BASE_URL = 'https://devyt.jinskadamthodu.com/public/api';
 
+// 2. IMAGE BASE URL (Excludes /api)
+export const IMAGE_BASE_URL = 'https://devyt.jinskadamthodu.com/public';
+
+// 3. Create Axios Instances
 export const publicRequest = axios.create({
-  baseURL: baseUrl,
+  baseURL: API_BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  },
 });
 
 export const userRequest = axios.create({
-  baseURL: baseUrl,
+  baseURL: API_BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  },
 });
 
-// Interceptors can be added here if you need to handle tokens in the future
+// 4. Debugging Interceptor
+// This will log the full URL to your console so you can check if it's correct
 userRequest.interceptors.request.use((config) => {
-    // Example: const token = localStorage.getItem('token');
-    // if (token) config.headers.Authorization = `Bearer ${token}`;
+    // console.log(`[API Request]: ${config.baseURL}${config.url}`);
     return config;
+}, (error) => {
+    return Promise.reject(error);
 });

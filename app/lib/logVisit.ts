@@ -1,4 +1,4 @@
-import { finalUrl } from '../api/services/services';
+import { userRequest } from '../api/v1/axios';
 
 interface VisitPayload {
   page_url: string;
@@ -21,7 +21,6 @@ function getDeviceType(): string {
 
 function getOrSetVisitorId(): string | null {
   if (typeof localStorage === 'undefined') return null;
-  
   let visitorId = localStorage.getItem('visitor_id');
   if (!visitorId) {
     visitorId = Math.random().toString(36).substr(2, 9) + Date.now();
@@ -32,11 +31,7 @@ function getOrSetVisitorId(): string | null {
 
 function getOrSetSessionId(): string | null {
   if (typeof sessionStorage === 'undefined' || typeof window === 'undefined') return null;
-
-  // Extend window interface locally to check for custom property
   const win = window as Window & { __session_id_initialized?: boolean };
-
-  // Always generate a new session_id on page load (refresh) if not initialized in memory
   if (!win.__session_id_initialized) {
     const sessionId = Math.random().toString(36).substr(2, 9) + Date.now();
     sessionStorage.setItem('session_id', sessionId);
@@ -46,7 +41,6 @@ function getOrSetSessionId(): string | null {
   return sessionStorage.getItem('session_id');
 }
 
-// Initialize session ID logic
 if (typeof window !== 'undefined') {
   const win = window as Window & { __session_id_initialized?: boolean };
   if (!sessionStorage.getItem('session_id')) {
@@ -58,7 +52,6 @@ if (typeof window !== 'undefined') {
 export async function logVisit() {
   if (typeof window === 'undefined') return;
 
-  // Prevent double logging for the same session and page
   const sessionId = getOrSetSessionId();
   const pathname = window.location.pathname;
   const pageKey = `visit_logged_${sessionId}_${pathname}`;
@@ -78,13 +71,9 @@ export async function logVisit() {
   };
 
   try {
-    await fetch(`${finalUrl}/api/visit-logs`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
+    // Use userRequest (axios) instead of fetch
+    await userRequest.post('/api/visit-logs', payload);
   } catch (error) {
     // Silently fail for analytics
-    // console.error('Failed to log visit', error);
   }
 }
