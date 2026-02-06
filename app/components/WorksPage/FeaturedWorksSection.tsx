@@ -22,7 +22,7 @@ const FeaturedWorksSection = ({ featuredWorks }: FeaturedWorksSectionProps) => {
           staggerType={'letter'}
           string={'Featured Works'}
           // gradient="linear-gradient(to bottom, #ff7e5f, #feb47b)"
-          gradient={'linear-gradient(to bottom, #fce39d, #fec52d)'}
+          gradient={'linear-gradient(to bottom, #fec52d, #fec52d)'}
           
         />
 

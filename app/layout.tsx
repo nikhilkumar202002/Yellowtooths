@@ -3,6 +3,7 @@ import { Providers } from './components/providers';
 import NavBar from './components/common/NavBar'; 
 import Footer from './components/common/Footer';
 import Preloader from './components/common/Preloader';
+import FloatingActionMenu from './components/common/FloatingActionMenu';
 import { Toaster } from 'sonner';
 import './globals.css';
 
@@ -27,6 +28,7 @@ export default function RootLayout({
                 <NavBar /> 
              </div>
              {children}
+             <FloatingActionMenu />
            </div>
            <Footer />
            <Toaster position="top-center" richColors theme="dark" />

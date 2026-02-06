@@ -21,7 +21,7 @@ const ClientsMarquee = ({ clients }: ClientsMarqueeProps) => {
         <div className="mb-4 overflow-hidden">
           <div className="flex animate-scroll-left">
             {[...firstRowClients, ...firstRowClients, ...firstRowClients, ...firstRowClients].map((client, index) => (
-              <div key={`row1-${client.id}-${index}`} className="flex justify-center items-center flex-shrink-0 mx-2 p-2 bg-neutral-800 rounded-lg w-32">
+              <div key={`row1-${client.id}-${index}`} className="flex justify-center items-center flex-shrink-0 mx-2 p-2 bg-neutral-900 rounded-lg w-32">
                 <img src={client.logo_path} alt={client.name} className="h-20 object-contain" />
               </div>
             ))}
@@ -32,7 +32,7 @@ const ClientsMarquee = ({ clients }: ClientsMarqueeProps) => {
         <div className="overflow-hidden">
           <div className="flex animate-scroll-right">
             {[...secondRowClients, ...secondRowClients, ...secondRowClients, ...secondRowClients].map((client, index) => (
-              <div key={`row2-${client.id}-${index}-rtl`} className="flex justify-center items-center flex-shrink-0 mx-2 p-2 bg-neutral-800 rounded-lg w-32">
+              <div key={`row2-${client.id}-${index}-rtl`} className="flex justify-center items-center flex-shrink-0 mx-2 p-2 bg-neutral-900 rounded-lg w-32">
                 <img src={client.logo_path} alt={client.name} className="h-20 object-contain" />
               </div>
             ))}
