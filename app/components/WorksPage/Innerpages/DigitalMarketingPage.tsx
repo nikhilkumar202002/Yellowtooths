@@ -3,25 +3,17 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useQueries } from '@tanstack/react-query';
 import { getServices, getPageHeader } from '@/api/services/services';
 import FooterCallToActionButton from '@/components/common/FooterCallToActionButton';
-import {
-  ClipboardCheck,
-  Lightbulb,
-  MessageSquare,
-  Palette,
-  Rocket,
-  Settings,
-  Tag,
-} from 'lucide-react';
+import { BarChart, FileText, Search, Share2, UserCheck } from 'lucide-react';
 import BorderGlowServiceCardGrid from '@/components/common/BorderGlowServiceCardGrid';
 import BorderGlowWorkGrid from '@/components/common/BorderGlowWorkGrid';
 import AnimatedWrapper from '@/components/common/AnimatedWrapper';
 import Spacer from '@/components/common/Spacer';
 import PageBanner from "../../../../public/IMAGES/1680x1050.webp"
-import { memo, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const BrandingPage = () => {
+const DigitalMarketingPage = () => {
   // Page header state
   const [header, setHeader] = useState(null);
   const [headerLoading, setHeaderLoading] = useState(true);
@@ -30,7 +22,7 @@ const BrandingPage = () => {
   useEffect(() => {
     let mounted = true;
     setHeaderLoading(true);
-    getPageHeader('Branding')
+    getPageHeader('Digital Marketing')
       .then((res) => {
         if (mounted && Array.isArray(res) && res.length > 0) {
           setHeader(res[0]);
@@ -48,51 +40,41 @@ const BrandingPage = () => {
   const queries = useQueries({
     queries: [
       {
-        queryKey: ['branding-page_get-branding'],
+        queryKey: ['digital-marketing-page_get-digital-marketing'],
         queryFn: () => getServices().then((data) => data.data),
       },
     ],
   });
-  const brandingQuery = queries[0];
+  const digitalMarketingQuery = queries[0];
   const services = [
     {
-      title: 'Brand Name',
-      description: 'Crafting unique and memorable brand names',
-      icon: Tag,
+      title: 'Social Media Marketing',
+      description: 'Engaging audiences across social platforms',
+      icon: Share2,
     },
     {
-      title: 'Brand Visual Identity',
-      description: 'Designing cohesive visual elements for your brand',
-      icon: Palette,
+      title: 'Content Marketing',
+      description: 'Creating valuable content to attract and retain customers',
+      icon: FileText,
     },
     {
-      title: 'Brand Strategy',
-      description: 'Developing comprehensive brand positioning and direction',
-      icon: Lightbulb,
+      title: 'Campaign Management',
+      description: 'Overseeing and optimizing marketing campaigns',
+      icon: BarChart,
     },
     {
-      title: 'Brand Launch',
-      description: 'Orchestrating impactful brand introductions to the market',
-      icon: Rocket,
+      title: 'Search Engine Optimization (SEO)',
+      description: 'Improving visibility in search engine results',
+      icon: Search,
     },
     {
-      title: 'Brand Communication',
-      description: 'Creating consistent and effective brand messaging',
-      icon: MessageSquare,
-    },
-    {
-      title: 'Brand Management',
-      description: 'Ongoing stewardship and evolution of your brand',
-      icon: Settings,
-    },
-    {
-      title: 'Brand Audit',
-      description: 'Comprehensive analysis and evaluation of your brand',
-      icon: ClipboardCheck,
+      title: 'Influencer Marketing',
+      description: 'Collaborating with influencers to promote your brand',
+      icon: UserCheck,
     },
   ];
 
-  const brandingImages = brandingQuery?.data;
+  const digitalMarketingImages = digitalMarketingQuery?.data;
 
   return (
     <AnimatedWrapper duration={2} blurInitial={10}>
@@ -109,19 +91,19 @@ const BrandingPage = () => {
               loading="lazy"
             />
             <div className="absolute inset-0 flex items-center justify-center">
-              <h1 className="text-yellow-400 text-4xl md:text-6xl font-bold uppercase text-center" style={{ fontFamily: 'Beckman Variable, sans-serif' }}>Branding</h1>
+              <h1 className="text-yellow-400 text-4xl md:text-6xl font-bold uppercase text-center" style={{ fontFamily: 'Beckman Variable, sans-serif' }}>Digital Marketing</h1>
             </div>
           </div>
         ) : (
           <div className="relative h-[40vh] w-full bg-black flex items-center justify-center">
             <img
               src={PageBanner.src}
-              alt="Branding"
-              className="h-full w-full  object-center"
+              alt="Digital Marketing"
+              className="h-full w-full object-center"
               loading="lazy"
             />
             <div className="absolute inset-0 flex items-center justify-center">
-              <h1 className="text-yellow-400 text-4xl md:text-6xl font-bold uppercase text-center" style={{ fontFamily: 'Beckman Variable, sans-serif' }}>Branding</h1>
+              <h1 className="text-yellow-400 text-4xl md:text-6xl font-bold uppercase text-center" style={{ fontFamily: 'Beckman Variable, sans-serif' }}>Digital Marketing</h1>
             </div>
           </div>
         )}
@@ -141,13 +123,14 @@ const BrandingPage = () => {
         <BorderGlowWorkGrid
           gridWidth={'max-w-7xl'}
           gridTitle={'Our Works'}
-          gridItems={brandingImages}
+          gridItems={digitalMarketingImages}
         />
 
         <div className={'pb-20'}>
           <FooterCallToActionButton
-            normalString={'To put your brand [BR] among the '}
-            highlightString={'Elites'}
+            enableHoverEffect={false}
+            normalString={'To go '}
+            highlightString={'Viral'}
             buttonString={'Reach out to us'}
           />
         </div>
@@ -156,4 +139,4 @@ const BrandingPage = () => {
   );
 };
 
-export default memo(BrandingPage);
+export default DigitalMarketingPage;

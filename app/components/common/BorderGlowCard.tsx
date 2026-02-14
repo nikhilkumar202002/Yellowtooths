@@ -6,22 +6,16 @@ import { cn } from '../../lib/utils';
 
 // Helper to convert colors to RGBA
 const convertToRGBA = (color: string, opacity: number) => {
-  if (typeof document === 'undefined') return color;
-  const tempDiv = document.createElement('div');
-  tempDiv.style.color = color;
-  document.body.appendChild(tempDiv);
-
-  const computedColor = getComputedStyle(tempDiv).color;
-  document.body.removeChild(tempDiv);
-
-  const rgbMatch = computedColor.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
-  if (rgbMatch) {
-    const r = rgbMatch[1];
-    const g = rgbMatch[2];
-    const b = rgbMatch[3];
+  // For simplicity, assume color is hex or rgb, convert to rgba
+  if (color.startsWith('#')) {
+    const r = parseInt(color.slice(1, 3), 16);
+    const g = parseInt(color.slice(3, 5), 16);
+    const b = parseInt(color.slice(5, 7), 16);
     return `rgba(${r}, ${g}, ${b}, ${opacity})`;
   }
-
+  if (color.startsWith('rgb(')) {
+    return color.replace('rgb(', 'rgba(').replace(')', `, ${opacity})`);
+  }
   return color;
 };
 
@@ -138,29 +132,25 @@ const BorderGlowCard = memo(
             )}
           />
 
-          {!isTouchDevice && (
-            <>
-              <motion.div
-                className={`pointer-events-none absolute inset-0 z-0 ${cardBorderRadiusProps[cardBorderRadius]} opacity-0 transition-opacity duration-500 group-hover:opacity-100`}
-                style={{
-                  background: useMotionTemplate`
-                    radial-gradient(${gradientSize}px circle at ${mouseX}px ${mouseY}px, ${gradientFrom}, ${gradientTo}, transparent),
-                    radial-gradient(${gradientSize}px circle at ${mouseX}px ${mouseY}px, #ffffff, transparent)
-                  `,
-                  opacity: gradientOpacity,
-                }}
-              />
-              <motion.div
-                className={`pointer-events-none ${cardBorderRadiusProps[cardBorderRadius]} absolute inset-0 z-10 opacity-0 transition-opacity duration-500 group-hover:opacity-100`}
-                style={{
-                  background: useMotionTemplate`
-                    radial-gradient(${radialGlowSize}px circle at ${whiteGlowX}px ${whiteGlowY}px, ${whiteGlowRGBA}, transparent)
-                  `,
-                  opacity: 1,
-                }}
-              />
-            </>
-          )}
+          <motion.div
+            className={`pointer-events-none absolute inset-0 z-0 ${cardBorderRadiusProps[cardBorderRadius]} opacity-0 transition-opacity duration-500 group-hover:opacity-100`}
+            style={{
+              background: useMotionTemplate`
+                radial-gradient(${gradientSize}px circle at ${mouseX}px ${mouseY}px, ${gradientFrom}, ${gradientTo}, transparent),
+                radial-gradient(${gradientSize}px circle at ${mouseX}px ${mouseY}px, #ffffff, transparent)
+              `,
+              opacity: gradientOpacity,
+            }}
+          />
+          <motion.div
+            className={`pointer-events-none ${cardBorderRadiusProps[cardBorderRadius]} absolute inset-0 z-10 opacity-0 transition-opacity duration-500 group-hover:opacity-100`}
+            style={{
+              background: useMotionTemplate`
+                radial-gradient(${radialGlowSize}px circle at ${whiteGlowX}px ${whiteGlowY}px, ${whiteGlowRGBA}, transparent)
+              `,
+              opacity: 1,
+            }}
+          />
           <div className="relative z-20">{children}</div>
         </div>
       );

@@ -3,25 +3,16 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useQueries } from '@tanstack/react-query';
 import { getServices, getPageHeader } from '@/api/services/services';
 import FooterCallToActionButton from '@/components/common/FooterCallToActionButton';
-import {
-  ClipboardCheck,
-  Lightbulb,
-  MessageSquare,
-  Palette,
-  Rocket,
-  Settings,
-  Tag,
-} from 'lucide-react';
+import { Code, Globe, GlobeLock, Layers, ShoppingCart } from 'lucide-react';
 import BorderGlowServiceCardGrid from '@/components/common/BorderGlowServiceCardGrid';
 import BorderGlowWorkGrid from '@/components/common/BorderGlowWorkGrid';
 import AnimatedWrapper from '@/components/common/AnimatedWrapper';
 import Spacer from '@/components/common/Spacer';
-import PageBanner from "../../../../public/IMAGES/1680x1050.webp"
-import { memo, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const BrandingPage = () => {
+const TechAndExpDesignPage = () => {
   // Page header state
   const [header, setHeader] = useState(null);
   const [headerLoading, setHeaderLoading] = useState(true);
@@ -30,7 +21,7 @@ const BrandingPage = () => {
   useEffect(() => {
     let mounted = true;
     setHeaderLoading(true);
-    getPageHeader('Branding')
+    getPageHeader('Technology & Experience Design')
       .then((res) => {
         if (mounted && Array.isArray(res) && res.length > 0) {
           setHeader(res[0]);
@@ -48,51 +39,46 @@ const BrandingPage = () => {
   const queries = useQueries({
     queries: [
       {
-        queryKey: ['branding-page_get-branding'],
+        queryKey: ['tech-and-exp-design-page_get-tech-and-exp-design'],
         queryFn: () => getServices().then((data) => data.data),
       },
     ],
   });
-  const brandingQuery = queries[0];
+  const techAndExpDesignQuery = queries[0];
   const services = [
     {
-      title: 'Brand Name',
-      description: 'Crafting unique and memorable brand names',
-      icon: Tag,
+      title: 'Web Development',
+      description: 'Creating responsive and dynamic websites',
+      icon: Globe,
     },
     {
-      title: 'Brand Visual Identity',
-      description: 'Designing cohesive visual elements for your brand',
-      icon: Palette,
+      title: 'App Development',
+      description: 'Building innovative mobile applications',
+      icon: Code,
     },
     {
-      title: 'Brand Strategy',
-      description: 'Developing comprehensive brand positioning and direction',
-      icon: Lightbulb,
+      title: 'UI/UX',
+      description: 'Designing intuitive and engaging user experiences',
+      icon: Layers,
     },
     {
-      title: 'Brand Launch',
-      description: 'Orchestrating impactful brand introductions to the market',
-      icon: Rocket,
+      title: 'E-Commerce',
+      description: 'Developing robust online shopping platforms',
+      icon: ShoppingCart,
     },
     {
-      title: 'Brand Communication',
-      description: 'Creating consistent and effective brand messaging',
-      icon: MessageSquare,
+      title: 'Web Application',
+      description: 'Creating powerful browser-based software solutions',
+      icon: Code,
     },
     {
-      title: 'Brand Management',
-      description: 'Ongoing stewardship and evolution of your brand',
-      icon: Settings,
-    },
-    {
-      title: 'Brand Audit',
-      description: 'Comprehensive analysis and evaluation of your brand',
-      icon: ClipboardCheck,
+      title: 'Cyber Security',
+      description: 'Protecting digital assets and ensuring data safety',
+      icon: GlobeLock,
     },
   ];
 
-  const brandingImages = brandingQuery?.data;
+  const techAndExpImages = techAndExpDesignQuery?.data;
 
   return (
     <AnimatedWrapper duration={2} blurInitial={10}>
@@ -109,19 +95,19 @@ const BrandingPage = () => {
               loading="lazy"
             />
             <div className="absolute inset-0 flex items-center justify-center">
-              <h1 className="text-yellow-400 text-4xl md:text-6xl font-bold uppercase text-center" style={{ fontFamily: 'Beckman Variable, sans-serif' }}>Branding</h1>
+              <h1 className="text-yellow-400 text-4xl md:text-6xl font-bold uppercase text-center" style={{ fontFamily: 'Beckman Variable, sans-serif' }}>Technology & Experience Design</h1>
             </div>
           </div>
         ) : (
           <div className="relative h-[40vh] w-full bg-black flex items-center justify-center">
             <img
-              src={PageBanner.src}
-              alt="Branding"
+              src="/1680x1050.webp" // Assuming the image is in public/
+              alt="Technology & Experience Design"
               className="h-full w-full  object-center"
               loading="lazy"
             />
             <div className="absolute inset-0 flex items-center justify-center">
-              <h1 className="text-yellow-400 text-4xl md:text-6xl font-bold uppercase text-center" style={{ fontFamily: 'Beckman Variable, sans-serif' }}>Branding</h1>
+              <h1 className="text-yellow-400 text-4xl md:text-6xl font-bold uppercase text-center" style={{ fontFamily: 'Beckman Variable, sans-serif' }}>Technology & Experience Design</h1>
             </div>
           </div>
         )}
@@ -141,13 +127,14 @@ const BrandingPage = () => {
         <BorderGlowWorkGrid
           gridWidth={'max-w-7xl'}
           gridTitle={'Our Works'}
-          gridItems={brandingImages}
+          gridItems={techAndExpImages}
         />
 
         <div className={'pb-20'}>
           <FooterCallToActionButton
-            normalString={'To put your brand [BR] among the '}
-            highlightString={'Elites'}
+            enableHoverEffect={false}
+            normalString={'To create effortless [BR]'}
+            highlightString={'experiences'}
             buttonString={'Reach out to us'}
           />
         </div>
@@ -156,4 +143,4 @@ const BrandingPage = () => {
   );
 };
 
-export default memo(BrandingPage);
+export default TechAndExpDesignPage;
