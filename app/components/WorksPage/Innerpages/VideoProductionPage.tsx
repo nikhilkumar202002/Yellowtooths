@@ -8,9 +8,10 @@ import HeroVideoSection from '@/components/common/HeroVideoSection';
 import { LampLight } from '@/components/common/LampLight';
 import { Building2, CircleIcon, Clapperboard, Shapes } from 'lucide-react';
 import BorderGlowGridCard from '@/components/common/BorderGlowServiceCardGrid';
-import BorderGlowImageGridCard from '@/components/common/BorderGlowImageCardGrid';
+import BorderGlowImageGridCard from '@/components/common/BorderGlowWorkGrid';
 import AnimatedWrapper from '@/components/common/AnimatedWrapper';
 import lenisScrollReset from '@/hooks/lenisScrollReset';
+import PageBanner from "../../../../public/IMAGES/1680x1050.webp"
 import { useEffect } from 'react';
 import WorksPageSkeleton from '@/components/common/WorksPageSkeleton';
 
@@ -98,7 +99,7 @@ const VideoProductionPage = () => {
         ) : (
           <div className="relative h-[40vh] w-full bg-black flex items-center justify-center">
             <img
-              src="/1680x1050.webp" // Assuming the image is in public/
+              src={PageBanner.src} // Assuming the image is in public/
               alt="Video Production"
               className="h-full w-full  object-center"
               loading="lazy"
