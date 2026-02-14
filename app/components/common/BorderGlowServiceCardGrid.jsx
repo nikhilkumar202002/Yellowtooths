@@ -6,7 +6,7 @@ import {
   BorderGlowCardTitle,
 } from '@/components/common/BorderGlowCard';
 import AnimatedWrapper from '@/components/common/AnimatedWrapper';
-import GradientTextAnimation from '@/components/common/GradientTextAnimation.jsx';
+import GradientTextAnimation from '@/components/common/GradientTextAnimation';
 
 const GRID_WIDTHS = {
   'max-w-xs': 'max-w-xs',
@@ -42,7 +42,7 @@ const GridItem = React.memo(({ icon: Icon, title, description }) => (
 GridItem.displayName = 'GridItem';
 
 const BorderGlowServiceCardGrid = ({
-  gridItems = [],
+  gridItems = /** @type {any[]} */ ([]),
   gridTitle = 'Grid Title',
   gridWidth = 'max-w-7xl',
 }) => (

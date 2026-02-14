@@ -12,6 +12,7 @@ import { useRouter } from 'next/navigation';
 import AnimatedPageWrapper from '../../common/AnimatedWrapper';
 import { Input } from '../../ui/input';
 import { Image, Type, Sliders, Palette, Globe, Crop, Layout, FileText } from 'lucide-react';
+import BorderGlowServiceCardGrid from '../../common/BorderGlowServiceCardGrid';
 import Spacer from '../../common/Spacer';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -172,6 +173,49 @@ const FilmPosterDesignPage = () => {
     { scope: gridRef, dependencies: [data] },
   );
 
+  const services = [
+    {
+      title: 'Key Art & Conceptual Design',
+      description: 'The first frame of your film’s journey',
+      icon: Image,
+    },
+    {
+      title: 'Title Design',
+      description: 'Immersive typography that enhances your film’s identity',
+      icon: Type,
+    },
+    {
+      title: 'Retouching & Visual Enhancement',
+      description: 'Flawless detailing, refined textures, and precision editing',
+      icon: Sliders,
+    },
+    {
+      title: 'High-End Colour Grading',
+      description: 'Mood-defining colour tones for cinematic impact',
+      icon: Palette,
+    },
+    {
+      title: 'Multi-Format Adaptations & Localizations',
+      description: 'Reformatting and language adaptations for screens and platforms',
+      icon: Globe,
+    },
+    {
+      title: 'Image Manipulation',
+      description: 'Reformatting and language adaptations for screens and platforms',
+      icon: Crop,
+    },
+    {
+      title: 'Story Board',
+      description: 'Reformatting and language adaptations for screens and platforms',
+      icon: Layout,
+    },
+    {
+      title: 'Mood Boards & Pitch Decks',
+      description: 'Reformatting and language adaptations for screens and platforms',
+      icon: FileText,
+    },
+  ];
+
   if (isLoading || (!data && isFetching)) {
     // Show a skeleton loader for fast perceived loading
     return <div className="p-8"><div className="animate-pulse grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -223,6 +267,11 @@ const FilmPosterDesignPage = () => {
             'w-full bg-gradient-to-b from-neutral-950 via-neutral-950 pb-10 md:pb-20'
           }>
           <Spacer />
+          <BorderGlowServiceCardGrid
+            gridWidth={'max-w-7xl'}
+            gridTitle={'Services'}
+            gridItems={services as any[]}
+          />
         </div>
 
         {/* Search Bar */}
