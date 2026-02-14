@@ -16,6 +16,7 @@ interface AnimatedWrapperProps {
   blurInitial?: number;
   delay?: number;
   duration?: number;
+  useScrollTrigger?: boolean;
 }
 
 const AnimatedWrapper = ({
@@ -25,6 +26,7 @@ const AnimatedWrapper = ({
   blurInitial = 5,
   delay = 0,
   duration = 1,
+  useScrollTrigger = true,
 }: AnimatedWrapperProps) => {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -47,11 +49,13 @@ const AnimatedWrapper = ({
           duration: duration,
           delay: delay,
           ease: 'power3.out',
-          scrollTrigger: {
-            trigger: el,
-            start: 'top 90%', // Triggers slightly before it enters fully
-            toggleActions: 'play none none reverse',
-          },
+          ...(useScrollTrigger && {
+            scrollTrigger: {
+              trigger: el,
+              start: 'top 90%', // Triggers slightly before it enters fully
+              toggleActions: 'play none none reverse',
+            },
+          }),
         }
       );
     },

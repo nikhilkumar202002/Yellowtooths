@@ -8,6 +8,12 @@ import {
 import AnimatedWrapper from '@/components/common/AnimatedWrapper';
 import GradientTextAnimation from '@/components/common/GradientTextAnimation';
 
+interface GridItemProps {
+  icon: React.ComponentType<{ className?: string }>;
+  title: string;
+  description: string;
+}
+
 const GRID_WIDTHS = {
   'max-w-xs': 'max-w-xs',
   'max-w-sm': 'max-w-sm',
@@ -23,7 +29,7 @@ const GRID_WIDTHS = {
   'max-w-full': 'max-w-full',
 };
 
-const GridItem = React.memo(({ icon: Icon, title, description }) => (
+const GridItem = React.memo(({ icon: Icon, title, description }: GridItemProps) => (
   <BorderGlowCard
     cardColor="bg-gradient-to-b from-[#090909] to-[#121212]"
     cardBorderRadius="2xl">
@@ -41,11 +47,17 @@ const GridItem = React.memo(({ icon: Icon, title, description }) => (
 
 GridItem.displayName = 'GridItem';
 
+interface BorderGlowServiceCardGridProps {
+  gridItems?: GridItemProps[];
+  gridTitle?: string;
+  gridWidth?: keyof typeof GRID_WIDTHS;
+}
+
 const BorderGlowServiceCardGrid = ({
-  gridItems = /** @type {any[]} */ ([]),
+  gridItems = [],
   gridTitle = 'Grid Title',
   gridWidth = 'max-w-7xl',
-}) => (
+}: BorderGlowServiceCardGridProps) => (
   <div className={`container mx-auto ${GRID_WIDTHS[gridWidth]} px-2 md:px-4`}>
     <BorderGlowCard
       cardColor="bg-gradient-to-b from-[#0a0a0a] to-[#0a0a0a]"

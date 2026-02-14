@@ -14,6 +14,7 @@ import { Input } from '../../ui/input';
 import { Image, Type, Sliders, Palette, Globe, Crop, Layout, FileText } from 'lucide-react';
 import BorderGlowServiceCardGrid from '../../common/BorderGlowServiceCardGrid';
 import Spacer from '../../common/Spacer';
+import BannerImage from "../../../../public/IMAGES/1680x1050.webp"
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -251,7 +252,7 @@ const FilmPosterDesignPage = () => {
         ) : (
           <div className="relative h-[40vh] w-full bg-black flex items-center justify-center">
             <img
-              src="/IMAGE/1680x1050.webp" // Assuming the image is in public/IMAGE/
+              src={BannerImage.src} // Assuming the image is in public/IMAGE/
               alt="Film Poster Design"
               className="h-full w-full object-center"
               loading="lazy"
