@@ -8,6 +8,7 @@ import BorderGlowServiceCardGrid from '@/components/common/BorderGlowServiceCard
 import BorderGlowWorkGrid from '@/components/common/BorderGlowWorkGrid';
 import AnimatedWrapper from '@/components/common/AnimatedWrapper';
 import Spacer from '@/components/common/Spacer';
+import PageBanner from "../../../../public/IMAGES/1680x1050.webp"
 import { useEffect, useState } from 'react';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -101,7 +102,7 @@ const TechAndExpDesignPage = () => {
         ) : (
           <div className="relative h-[40vh] w-full bg-black flex items-center justify-center">
             <img
-              src="/1680x1050.webp" // Assuming the image is in public/
+              src={PageBanner.src} // Assuming the image is in public/
               alt="Technology & Experience Design"
               className="h-full w-full  object-center"
               loading="lazy"
