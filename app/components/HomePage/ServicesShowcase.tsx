@@ -11,7 +11,7 @@ import { cn } from '../../lib/utils';
 
 interface ServicesShowcaseProps {
   services: any[];
-  cardsContainerRef: React.RefObject<HTMLDivElement>;
+  cardsContainerRef: React.RefObject<HTMLDivElement | null>;
   cardsRef: React.MutableRefObject<(HTMLDivElement | null)[]>;
   className?: string;
   style?: React.CSSProperties;

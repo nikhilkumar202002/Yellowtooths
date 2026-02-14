@@ -127,7 +127,7 @@ export default function NavBar() {
                     <Link
                       key={link.path}
                       href={link.path}
-                      className="hidden w-full items-center py-2 text-xl font-semibold text-neutral-300 hover:text-white"
+                      className="w-full items-center py-2 text-xl font-semibold text-neutral-300 hover:text-white"
                       onClick={handleCloseSheet}>
                       {link.name}
                     </Link>

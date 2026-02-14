@@ -7,7 +7,7 @@ export function verticalLoop(items: any[], config: any) {
     repeat: config.repeat,
     paused: config.paused,
     defaults: { ease: "none" },
-    onReverseComplete: () => tl.totalTime(tl.rawTime() + tl.duration() * 100),
+    onReverseComplete: () => { tl.totalTime(tl.rawTime() + tl.duration() * 100); },
   });
   let length = items.length;
   let startY = items[0].offsetTop;

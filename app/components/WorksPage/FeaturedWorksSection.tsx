@@ -37,7 +37,7 @@ const FeaturedWorksSection = ({ featuredWorks }: FeaturedWorksSectionProps) => {
       </div> */}
 
       <div className="mt-16 md:mt-24 mb-20">
-        <InfiniteCarousel data={featuredWorks} />
+        <InfiniteCarousel />
       </div>
     </section>
   );

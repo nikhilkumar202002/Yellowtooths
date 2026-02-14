@@ -133,7 +133,7 @@ const HomePage = () => {
 
           // FIX: Use standard snap logic. Removed conflicting lenis.scrollTo
           snap: {
-            snapTo: "labelsDirection", // or simply 1 to snap to end
+            snapTo: "labelsDirectional", // or simply 1 to snap to end
             duration: { min: 0.2, max: 0.5 },
             delay: 0.1,
           },

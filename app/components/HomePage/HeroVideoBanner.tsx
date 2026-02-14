@@ -3,8 +3,8 @@
 import React, { forwardRef } from 'react';
 
 interface HeroVideoBannerProps {
-  zoomTextRef: React.RefObject<HTMLDivElement>;
-  videoRef: React.RefObject<HTMLVideoElement>;
+  zoomTextRef: React.RefObject<HTMLDivElement | null>;
+  videoRef: React.RefObject<HTMLVideoElement | null>;
 }
 
 const HeroVideoBanner = forwardRef<HTMLDivElement, HeroVideoBannerProps>(

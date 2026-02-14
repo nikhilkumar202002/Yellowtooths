@@ -18,7 +18,7 @@ function splitString(str: string, type: 'word' | 'letter' = 'letter') {
     });
   }
   const segments = str.split('[BR]');
-  const output: (string | JSX.Element)[] = [];
+  const output: (string | React.ReactElement)[] = [];
   segments.forEach((segment, segIndex) => {
     const words = segment.split(' ');
     words.forEach((word) => {
