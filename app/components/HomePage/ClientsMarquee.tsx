@@ -5,9 +5,10 @@ import TextAnimation from '../common/TextAnimation';
 
 interface ClientsMarqueeProps {
   clients: any[];
+  title?: string;
 }
 
-const ClientsMarquee = ({ clients }: ClientsMarqueeProps) => {
+const ClientsMarquee = ({ clients, title = 'Our Clients' }: ClientsMarqueeProps) => {
   const midIndex = Math.ceil(clients.length / 2);
   const firstRowClients = clients.slice(0, midIndex);
   const secondRowClients = clients.slice(midIndex);
@@ -15,7 +16,7 @@ const ClientsMarquee = ({ clients }: ClientsMarqueeProps) => {
   return (
     <section className="relative py-20">
       <div className="w-full">
-        <TextAnimation textPosition={'center'} classname={'tracking-tight text-h2-lg mb-10'} yPositionInitial={200} string={'Our Clients'} />
+        <TextAnimation textPosition={'center'} classname={'tracking-tight text-h2-lg mb-10'} yPositionInitial={200} string={title} />
         
         {/* Row 1 */}
         <div className="mb-4 overflow-hidden">

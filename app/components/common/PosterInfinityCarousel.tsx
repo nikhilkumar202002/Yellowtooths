@@ -132,18 +132,6 @@ const PosterInfinityCarousel = ({
     return () => cleanupAnimations();
   }, []);
 
-  useEffect(() => {
-    cleanupAnimations();
-
-    const timer = setTimeout(() => {
-      if (gridRef.current) {
-        initializeAnimations();
-      }
-    }, 300);
-
-    return () => clearTimeout(timer);
-  }, [numColumns, featuredWorks]);
-
   const initializeAnimations = () => {
     const mapSpeedToDuration = (speed: number) => 20 / (speed || 0.05);
     const defaultSpeed = 0.05;
@@ -215,7 +203,7 @@ const PosterInfinityCarousel = ({
     () => {
       return initializeAnimations();
     },
-    { scope: gridRef, dependencies: [numColumns, featuredWorks] },
+    { scope: gridRef, dependencies: [numColumns, splitWorks] },
   );
 
   if (isLoading) return <Loading />;

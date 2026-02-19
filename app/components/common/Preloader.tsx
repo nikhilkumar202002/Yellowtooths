@@ -22,6 +22,7 @@ function Preloader({ waveDirection = 'top' }: PreloaderProps) {
   const [svgIsLoaded, setSvgIsLoaded] = useState(false);
   const fillerRef = useRef<HTMLDivElement>(null);
   const mainContainerRef = useRef<HTMLDivElement>(null);
+  const lastReportedProgressRef = useRef<number>(0);
 
   useEffect(() => {
     if (!isPreloaderLoaded) {
@@ -61,7 +62,11 @@ function Preloader({ waveDirection = 'top' }: PreloaderProps) {
 
       const tl = gsap.timeline({
         onUpdate: () => {
-          setProgress(progressObj.value);
+          const roundedProgress = Math.floor(progressObj.value);
+          if (roundedProgress !== lastReportedProgressRef.current) {
+            lastReportedProgressRef.current = roundedProgress;
+            setProgress(roundedProgress);
+          }
           if (fillerRef.current) {
             gsap.set(fillerRef.current, { 
               height: `${progressObj.value}%`, 

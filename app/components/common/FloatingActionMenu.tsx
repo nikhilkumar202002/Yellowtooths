@@ -76,12 +76,12 @@ const FloatingActionMenu = () => {
                   exit={{ opacity: 0, y: 20, scale: 0.5 }}
                   transition={{ delay: link.delay }}
                   className={cn(
-                    "flex h-12 w-12 items-center justify-center rounded-full text-white shadow-lg transition-transform hover:scale-110",
+                    "flex h-10 w-10 items-center justify-center rounded-full text-white shadow-lg transition-transform hover:scale-110",
                     link.color
                   )}
                   title={link.label}
                 >
-                  <link.icon size={20} />
+                  <link.icon size={16} />
                 </motion.a>
               ))}
             </div>
@@ -91,11 +91,11 @@ const FloatingActionMenu = () => {
         <button
           onClick={() => setIsOpen(!isOpen)}
           className={cn(
-            "flex h-14 w-14 items-center justify-center rounded-full bg-[#fec52d] text-black shadow-[0_0_20px_rgba(254,197,45,0.4)] transition-all duration-300 hover:scale-110",
+            "flex h-12 w-12 items-center justify-center rounded-full bg-[#fec52d] text-black shadow-[0_0_20px_rgba(254,197,45,0.4)] transition-all duration-300 hover:scale-110",
             isOpen ? "rotate-45" : "rotate-0"
           )}
         >
-          {isOpen ? <X size={28} /> : <Plus size={28} />}
+          {isOpen ? <X size={20} /> : <Plus size={20} />}
         </button>
       </div>
 
@@ -107,7 +107,7 @@ const FloatingActionMenu = () => {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0 }}
             onClick={scrollToTop}
-            className="group relative flex h-14 w-14 items-center justify-center rounded-full bg-black border border-white/10"
+            className="group relative flex h-12 w-12 items-center justify-center rounded-full bg-black border border-white/10"
           >
             {/* 3. SVG for Synced Border Fill */}
             <svg className="absolute inset-0 h-full w-full -rotate-90" viewBox="0 0 100 100">
@@ -137,7 +137,7 @@ const FloatingActionMenu = () => {
             {/* The Inner Glow (Glows more on hover) */}
             <div className="absolute inset-0 rounded-full shadow-[0_0_15px_rgba(254,197,45,0.3)] group-hover:shadow-[0_0_25px_rgba(254,197,45,0.6)] transition-all" />
             
-            <ArrowUp size={24} className="relative z-10 text-[#fec52d] transition-transform group-hover:-translate-y-1" />
+            <ArrowUp size={20} className="relative z-10 text-[#fec52d] transition-transform group-hover:-translate-y-1" />
           </motion.button>
         )}
       </AnimatePresence>

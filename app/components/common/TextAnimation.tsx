@@ -152,7 +152,7 @@ const TextAnimation = memo(
                 trigger: refs.heading.current,
                 start: 'top 80%',
                 end: 'bottom 20%',
-                toggleActions: 'play none none reverse',
+                toggleActions: 'play reverse play reverse',
                 markers: false,
               }
             : undefined,

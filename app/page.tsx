@@ -3,7 +3,6 @@
 import React, { memo, useRef, useEffect, useState } from 'react';
 import { logVisit } from './lib/logVisit';
 import Loading from './components/common/Loading';
-import { useLenis } from 'lenis/react';
 import Error from './components/common/Error';
 import { useQueries } from '@tanstack/react-query';
 import { getClients, getServices } from './api/services/services';
@@ -13,6 +12,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { usePathname } from 'next/navigation';
 import { setIsTilesFlipped } from './redux/animation/flipboardSlice';
 import { useAppDispatch } from './redux/hooks'; 
+import { homeContent } from './data/homeContent';
 
 // Components
 import FooterCallToActionButton from './components/common/FooterCallToActionButton';
@@ -28,7 +28,6 @@ if (typeof window !== 'undefined') {
 }
 
 const HomePage = () => {
-  const lenis = useLenis();
   const pathname = usePathname();
   const dispatch = useAppDispatch();
   const [isMounted, setIsMounted] = useState(false);
@@ -41,12 +40,8 @@ const HomePage = () => {
         window.scrollTo(0, 0);
     }
     
-    // Refresh only ONCE after mount to ensure layout is correct
-    const timer = setTimeout(() => {
-      ScrollTrigger.refresh();
-    }, 1000);
-
-    return () => clearTimeout(timer);
+    const rafId = requestAnimationFrame(() => ScrollTrigger.refresh());
+    return () => cancelAnimationFrame(rafId);
   }, []);
 
   const queries = useQueries({
@@ -113,6 +108,16 @@ const HomePage = () => {
 
     // --- VIDEO ZOOM LOGIC ---
     if (zoomText && zoomO && videoBanner && servicesSection) {
+      const setZoomTextScale = gsap.quickSetter(zoomText, 'scale');
+      const setZoomOScale = gsap.quickSetter(zoomO as Element, 'scale');
+      const setVideoOpacity = gsap.quickSetter(videoBanner, 'opacity');
+      const setServicesOpacity = servicesWrapper
+        ? gsap.quickSetter(servicesWrapper, 'opacity')
+        : null;
+      const setServicesScale = servicesWrapper
+        ? gsap.quickSetter(servicesWrapper, 'scale')
+        : null;
+
       gsap.to(zoomO, {
         scrollTrigger: {
           trigger: videoBanner,
@@ -132,31 +137,22 @@ const HomePage = () => {
           },
 
           // FIX: Use standard snap logic. Removed conflicting lenis.scrollTo
-          snap: {
-            snapTo: "labelsDirectional", // or simply 1 to snap to end
-            duration: { min: 0.2, max: 0.5 },
-            delay: 0.1,
-          },
+          snap: 1,
 
           onUpdate: (self) => {
             const progress = self.progress;
             const scale = progress > 0 ? gsap.utils.mapRange(0, 1, 1, 10)(progress) : 1;
-            
             const videoOpacity = 1 - progress;
             const servicesOpacity = Math.min(1, progress);
             const servicesScale = Math.min(1, progress);
 
-            gsap.set(zoomText, { scale: scale });
-            gsap.set(zoomO, { scale: scale });
-            
-            gsap.set(videoBanner, { opacity: videoOpacity });
+            setZoomTextScale(scale);
+            setZoomOScale(scale);
+            setVideoOpacity(videoOpacity);
 
-            if (servicesWrapper) {
-              gsap.set(servicesWrapper, {
-                opacity: servicesOpacity,
-                scale: servicesScale,
-                transformOrigin: 'center center',
-              });
+            if (setServicesOpacity && setServicesScale) {
+              setServicesOpacity(servicesOpacity);
+              setServicesScale(servicesScale);
             }
           },
         },
@@ -166,6 +162,7 @@ const HomePage = () => {
     // --- SERVICES LAYER LOGIC ---
     if (servicesWrapper) {
        const scrollEnd = window.innerWidth <= 768 ? 'bottom 100%' : 'bottom 50%';
+       let didRaiseZIndex = false;
        
        gsap.to(servicesWrapper, {
          opacity: '100%',
@@ -177,21 +174,24 @@ const HomePage = () => {
            scrub: 2,
            onUpdate: (self) => {
              // Logic to swap Z-Index so cards become clickable/viewable
-             if (self.progress >= 0.8) {
+             if (self.progress >= 0.8 && !didRaiseZIndex) {
                 gsap.set(servicesWrapper, { zIndex: 3 });
+                didRaiseZIndex = true;
              }
            },
            onLeaveBack: () => {
+             didRaiseZIndex = false;
              // Reset video banner on scroll back up
              if (videoBanner) {
                 gsap.set(videoBanner, { position: 'absolute', zIndex: '3', opacity: '1' });
              }
+             gsap.set(servicesWrapper, { zIndex: 1 });
            }
          }
        });
     }
 
-  }, { scope: mainContainerRef, dependencies: [clientsQuery.data, servicesQuery.data, lenis, isMounted] });
+  }, { scope: mainContainerRef, dependencies: [clientsQuery.data, servicesQuery.data, isMounted] });
 
   // 3. Simple Cards Stagger
   useGSAP(() => {
@@ -224,33 +224,37 @@ const HomePage = () => {
       <PosterInfinityCarousel />
 
       <div className={'relative flex h-screen'}>
-        <RippleDemo />
+        <RippleDemo texts={homeContent.rippleTexts} />
       </div>
 
       <section ref={servicesSectionRef} className="relative">
         <HeroVideoBanner 
-            ref={videoBannerRef} 
-            zoomTextRef={zoomTextRef} 
-            videoRef={videoRef} 
+          ref={videoBannerRef} 
+          zoomTextRef={zoomTextRef} 
+          videoRef={videoRef}
+          zoomText={homeContent.heroZoom}
         />
 
         <ServicesShowcase 
-            ref={servicesWrapperRef}
-            services={servicesQuery.data || []}
-            cardsContainerRef={cardsContainerRef}
-            cardsRef={cardsRef}
+          ref={servicesWrapperRef}
+          services={servicesQuery.data || []}
+          cardsContainerRef={cardsContainerRef}
+          cardsRef={cardsRef}
+          bannerLines={homeContent.services.bannerLines}
+          sectionTitle={homeContent.services.sectionTitle}
+          sectionSubtitle={homeContent.services.sectionSubtitle}
         />
       </section>
 
-      <ClientsMarquee clients={clientsQuery.data || []} />
+      <ClientsMarquee clients={clientsQuery.data || []} title={homeContent.clients.title} />
 
-      <CollaborationStory />
+      <CollaborationStory lines={homeContent.collaboration.lines} />
 
       <section className="relative flex items-center justify-center px-4 pb-20">
         <FooterCallToActionButton 
-            normalString={'Partner with us to [BR] Create something [BR]'} 
-            highlightString={'Unforgettable.'} 
-            buttonString={'Reach out to us'} 
+          normalString={homeContent.footerCta.normal} 
+          highlightString={homeContent.footerCta.highlight} 
+          buttonString={homeContent.footerCta.button} 
         />
       </section>
     </div>

@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react';
 import { ReactLenis } from 'lenis/react';
 import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 interface LenisScrollProps {
   children: React.ReactNode;
@@ -20,8 +21,12 @@ const LenisScroll = ({ children }: LenisScrollProps) => {
     // Connect GSAP ticker to Lenis
     gsap.ticker.add(update);
 
+    // Connect Lenis scroll to ScrollTrigger
+    lenisRef.current?.lenis?.on('scroll', ScrollTrigger.update);
+
     return () => {
       gsap.ticker.remove(update);
+      lenisRef.current?.lenis?.off('scroll', ScrollTrigger.update);
     };
   }, []);
 
